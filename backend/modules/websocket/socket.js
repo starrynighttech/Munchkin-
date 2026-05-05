@@ -5,15 +5,17 @@ export function initSocket(server) {
     cors: { origin: "*" }
   })
 
-  io.on("connection", socket => {
+  io.on("connection", (socket) => {
     console.log("User connected:", socket.id)
 
-    socket.on("shake", data => {
-      // matchmaking trigger
+    // 📍 LIVE LOCATION UPDATES
+    socket.on("location:update", (data) => {
+      io.emit("location:broadcast", data)
     })
 
-    socket.on("location", data => {
-      io.emit("live-location", data)
+    // 🤝 SHAKE MATCH SYSTEM HOOK
+    socket.on("shake", (data) => {
+      io.emit("shake:received", data)
     })
   })
 

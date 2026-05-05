@@ -1,22 +1,25 @@
 import express from "express"
+import http from "http"
 import cors from "cors"
 import mongoose from "mongoose"
-import dotenv from "dotenv"
-
-import authRoutes from "./src/modules/auth/auth.routes.js"
-import userRoutes from "./src/modules/users/user.routes.js"
-
-dotenv.config()
+import { initSocket } from "./src/modules/websocket/socket.js"
 
 const app = express()
+const server = http.createServer(app)
+
 app.use(cors())
 app.use(express.json())
 
-app.use("/api/auth", authRoutes)
-app.use("/api/users", userRoutes)
-
 mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log("DB Connected"))
-  .catch(err => console.log(err))
 
-app.listen(5000, () => console.log("Server running on port 5000"))
+// 🔥 LIVE SYSTEM ATTACHED HERE
+const io = initSocket(server)
+
+// routes here
+app.get("/", (req, res) => {
+  res.send("API Running")
+})
+
+server.listen(5000, () => {
+  console.log("Server running on 5000")
+})

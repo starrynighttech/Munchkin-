@@ -1,13 +1,15 @@
-export function generateCustomerDebitNote(order) {
+export function generateLogisticsDebitNote(order, logisticsCompany) {
   return {
-    debitNoteId: `DN-${Date.now()}`,
-    type: "CUSTOMER_VIEW",
-    orderId: order._id,
-    summary: {
-      items: order.items,
-      total: order.total,
-      deliveryFee: order.shippingCost
+    debitNoteId: `LDN-${Date.now()}`,
+    type: "LOGISTICS_INTERNAL",
+    company: logisticsCompany.name,
+    costBreakdown: {
+      fuel: 4.00,
+      labor: 2.50,
+      handling: 1.50
     },
-    message: "This is your purchase summary and charges breakdown"
+    totalCost: order.shippingCost,
+    profitMargin: order.shippingCost - 8.00,
+    internalUseOnly: true
   }
 }
